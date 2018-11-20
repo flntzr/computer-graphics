@@ -135,7 +135,7 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		// Transformation durchf�hren (Matrix anpassen)		
 		Matrix4 mat = new Matrix4().rotateX(rotation*.3f).rotateY(rotation).translate(0, 0f, -6f);
 		rotation += 0.03f;
-		this.transformationMatrix = mat.multiply(this.projectionMatrix);
+		this.transformationMatrix = mat;
 	}
 
 	@Override
@@ -143,6 +143,8 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		this.passMatrix("matrix", this.transformationMatrix);
+		this.passMatrix("projection_matrix", this.projectionMatrix);
+		
 		glDrawArrays(GL_TRIANGLES, 0, this.pixelCoords.length);
 		// Matrix an Shader �bertragen
 		// VAOs zeichnen
