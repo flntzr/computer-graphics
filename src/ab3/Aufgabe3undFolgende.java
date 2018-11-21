@@ -49,13 +49,12 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private final float[] gColor = { 0f, 1f, 0f };
 	private final float[] bColor = { 0f, 0f, 1f };
 	
-//	private final float[][] pixelCoords = { 
-//			cPos, yPos, rPos, 
-//			rPos, yPos, gPos, 
-//			gPos, yPos, bPos, 
-//			bPos, yPos, cPos,
-//			bPos, cPos, rPos, 
-//			bPos, rPos, gPos };
+	private final float[] cNormalVector = { -1f, -1f, 1f };
+	private final float[] yNormalVector = { 0f, 1f, 0f };
+	private final float[] rNormalVector = { 1f, -1f, 1f };
+	private final float[] gNormalVector = { 1f, -1f, -1f };
+	private final float[] bNormalVector = { -1f, -1f, -1f };
+
 	private final float[][] pixelCoords = { 
 			cPos, rPos,yPos, 
 			rPos, gPos,yPos, 
@@ -70,58 +69,14 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 			bColor, cColor, yColor,
 			bColor, rColor, cColor,
 			bColor, gColor, rColor };
-
-	private final float[] normalVectors = {
-		-1f, -1f, 1f, // C
-		0f, 1f, 0f, // Y
-		1f, -1f, 0.5f, // R
-		
-		1f, -1f, 0.5f, // R
-		0f, 1f, 0f, // Y
-		1f, -1f, -1f, // G
-		
-		1f, -1f, -1f, // G
-		0f, 1f, 0f, // Y
-		-1f, -1f, -.5f, // B
-		
-		-1f, -1f, -.5f, // B
-		0f, 1f, 0f, // Y
-		-1f, -1f, 1f, // C
-		
-		-1f, -1f, -.5f, // B
-		-1f, -1f, 1f, // C
-		1f, -1f, 0.5f, // R
-		
-		-1f, -1f, -.5f, // B
-		1f, -1f, 0.5f, // R
-		1f, -1f, -1f // G
-	};
-
-//	private final float[] colors = {
-//			0f, 1f, 1f, 
-//			1f, 1f, 0f, 
-//			1f, 0f, 0f,
-//			
-//			1f, 0f, 0f, 
-//			1f, 1f, 0f, 
-//			0f, 1f, 0f,
-//			
-//			0f, 1f, 0f, 
-//			1f, 1f, 0f, 
-//			0f, 0f, 1f,
-//			
-//			0f, 0f, 1f, 
-//			1f, 1f, 0f,
-//			0f, 1f, 1f, 
-//			
-//			0f, 0f, 1f, 
-//			0f, 1f, 1f, 
-//			1f, 0f, 0f,
-//			
-//			0f, 0f, 1f, 
-//			1f, 0f, 0f,
-//			0f, 1f, 0f 
-//	};
+	
+	private final float[][] normalVectors = { 
+			cNormalVector, rNormalVector, yNormalVector,
+			rNormalVector, gNormalVector, yNormalVector,
+			gNormalVector, bNormalVector, yNormalVector,
+			bNormalVector, cNormalVector, yNormalVector,
+			bNormalVector, rNormalVector, cNormalVector,
+			bNormalVector, gNormalVector, rNormalVector };
 
 	public static void main(String[] args) {
 		new Aufgabe3undFolgende().start("CG Aufgabe 3", windowWidth, windowHeight);
@@ -139,7 +94,6 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		int shaderNum = 0;
 		this.bindShader(this.pixelCoords, 3, shaderNum++);
 		this.bindShader(this.colors, 3, shaderNum++);
-//		this.bindShader(this.normalVectors, 3, shaderNum++);
 
 		glUseProgram(this.phongProgram.getId());
 		va = glGenVertexArrays();
@@ -163,29 +117,6 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		}
 		this.bindShader(result, groupSize, pos);
 	}
-
-//	private float[] createNormalVectors(float[][] pixelCoords) {
-//		float[] result = new float[3 * pixelCoords.length];
-//		int index = 0;
-//		for (int i = 0; i < pixelCoords.length; i+=3) {
-//			float[] v1 = VectorUtils.subtractVec3(pixelCoords[i + 1], pixelCoords[i + 1]);
-//			float[] v2 = VectorUtils.subtractVec3(pixelCoords[i], pixelCoords[i + 2]);
-//			float[] n = VectorUtils.crossProductVec3(v1, v2);				
-//			result[index++] = n[0];
-//			result[index++] = n[1];
-//			result[index++] = n[2];
-//			v1 = VectorUtils.subtractVec3(pixelCoords[i], pixelCoords[i + 1]);
-//			v2 = VectorUtils.subtractVec3(pixelCoords[i], pixelCoords[i + 2]);
-//			n = VectorUtils.crossProductVec3(v1, v2);
-//			result[index++] = n[0];
-//			result[index++] = n[1];
-//			result[index++] = n[2];
-//			result[index++] = n[0];
-//			result[index++] = n[1];
-//			result[index++] = n[2];
-//		}
-//		return result;
-//	}
 
 	private void bindShader(float[] arr, int groupSize, int pos) {
 		int vb = glGenBuffers();
