@@ -1,32 +1,32 @@
 package ab3;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL33.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL33.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL33.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL33.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL33.GL_FLOAT;
+import static org.lwjgl.opengl.GL33.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL33.glClear;
+import static org.lwjgl.opengl.GL33.glDrawArrays;
+import static org.lwjgl.opengl.GL33.glEnable;
+import static org.lwjgl.opengl.GL33.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL33.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL33.glBindBuffer;
+import static org.lwjgl.opengl.GL33.glBufferData;
+import static org.lwjgl.opengl.GL33.glGenBuffers;
+import static org.lwjgl.opengl.GL33.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL33.glGetUniformLocation;
+import static org.lwjgl.opengl.GL33.glUniformMatrix4fv;
+import static org.lwjgl.opengl.GL33.glUseProgram;
+import static org.lwjgl.opengl.GL33.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL33.glBindVertexArray;
+import static org.lwjgl.opengl.GL33.glGenVertexArrays;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
+import org.lwjgl.opengl.GL33;
 
 import lenz.opengl.AbstractOpenGLBase;
 import lenz.opengl.ShaderProgram;
+import lenz.opengl.Texture;
 
 public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 
@@ -34,6 +34,8 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private ShaderProgram phongProgram;
 	private static int windowWidth = 700;
 	private static int windowHeight = 700;
+	private String textureName = "turtle.jpg";
+	
 	private float rotation = 0f;
 	private Matrix4 transformationMatrix;
 	private Matrix4 projectionMatrix = new Matrix4(1f, 50f, 1f, 1f);
@@ -49,11 +51,11 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private final float[] gColor = { 0f, 1f, 0f };
 	private final float[] bColor = { 0f, 0f, 1f };
 	
-	private final float[] cNormalVector = { -1f, -1f, 1f };
-	private final float[] yNormalVector = { 0f, 1f, 0f };
-	private final float[] rNormalVector = { 1f, -1f, 1f };
-	private final float[] gNormalVector = { 1f, -1f, -1f };
-	private final float[] bNormalVector = { -1f, -1f, -1f };
+	private final float[] cUV = { 0f, 1f };
+	private final float[] yUV = { .5f, 0f };
+	private final float[] rUV = { 0f, -1f };
+	private final float[] gUV = { 0f, 1f };
+	private final float[] bUV = { 0f, -1f };
 	
 	private final float[] cryNormalVector = { 0f, 1f, 1f };
 	private final float[] rgyNormalVector = { 1f, 1f, 0f };
@@ -84,6 +86,15 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 			crgbNormalVector, crgbNormalVector, crgbNormalVector,
 			crgbNormalVector, crgbNormalVector, crgbNormalVector
 	};
+	
+	
+	private final float[][] uvCoords = { 
+		cUV, rUV, yUV,
+		rUV, gUV, yUV,
+		gUV, bUV, yUV,
+		bUV, cUV, yUV,
+		bUV, rUV, cUV,
+		bUV, gUV, rUV };
 
 	public static void main(String[] args) {
 		new Aufgabe3undFolgende().start("CG Aufgabe 3", windowWidth, windowHeight);
@@ -109,6 +120,11 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		this.bindShader(this.pixelCoords, 3, shaderNum++);
 		this.bindShader(this.colors, 3, shaderNum++);
 		this.bindShader(this.normalVectors, 3, shaderNum++);
+		this.bindShader(this.uvCoords, 2, shaderNum++);
+		
+		Texture texture = new Texture(this.textureName);
+		int textureId = texture.getId();
+		GL33.glBindTexture(textureId, GL33.GL_TEXTURE0);
 
 		glEnable(GL_DEPTH_TEST); // z-Buffer aktivieren
 		glEnable(GL_CULL_FACE); // backface culling aktivieren
@@ -118,9 +134,9 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		float[] result = new float[3 * arr.length];
 		int index = 0;
 		for (int i = 0; i < arr.length; i++) {
-			result[index++] = arr[i][0];
-			result[index++] = arr[i][1];
-			result[index++] = arr[i][2];
+			for (int j = 0; j < groupSize; j++) {
+				result[index++] = arr[i][j];				
+			}
 		}
 		this.bindShader(result, groupSize, pos);
 	}

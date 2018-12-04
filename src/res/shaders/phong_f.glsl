@@ -8,7 +8,7 @@ out vec3 color;
 
 float n = .5; // hardness
 float iL = 1.5; // light intensity
-vec3 light_pos = vec3(0, 0, 5); // light position
+vec3 light_pos = vec3(0, 0, 50); // light position
 float iA = .9;
 float kA = .5;
 float kS = .3;
