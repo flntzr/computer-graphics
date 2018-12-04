@@ -38,7 +38,7 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private Matrix4 transformationMatrix;
 	private Matrix4 projectionMatrix = new Matrix4(1f, 50f, 1f, 1f);
 	private final float[] cPos = { -1f, 0f, 1f };
-	private final float[] yPos = { 0f, .707f, 0f };
+	private final float[] yPos = { 0f, 1f, 0f };
 	private final float[] rPos = { 1f, 0f, 1f };
 	private final float[] gPos = { 1f, 0f, -1f };
 	private final float[] bPos = { -1f, 0f, -1f };
@@ -54,6 +54,12 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private final float[] rNormalVector = { 1f, -1f, 1f };
 	private final float[] gNormalVector = { 1f, -1f, -1f };
 	private final float[] bNormalVector = { -1f, -1f, -1f };
+	
+	private final float[] cryNormalVector = { 0f, 1f, 1f };
+	private final float[] rgyNormalVector = { 1f, 1f, 0f };
+	private final float[] bgyNormalVector = { 0f, 1f, -1f };
+	private final float[] bcyNormalVector = { -1f, 1f, 0f };
+	private final float[] crgbNormalVector = { 0f, -1f, 0f };
 
 	private final float[][] pixelCoords = { 
 			cPos, rPos,yPos, 
@@ -71,12 +77,13 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 			bColor, gColor, rColor };
 	
 	private final float[][] normalVectors = { 
-			cNormalVector, rNormalVector, yNormalVector,
-			rNormalVector, gNormalVector, yNormalVector,
-			gNormalVector, bNormalVector, yNormalVector,
-			bNormalVector, cNormalVector, yNormalVector,
-			bNormalVector, rNormalVector, cNormalVector,
-			bNormalVector, gNormalVector, rNormalVector };
+			cryNormalVector, cryNormalVector, cryNormalVector,
+			rgyNormalVector, rgyNormalVector, rgyNormalVector,
+			bgyNormalVector, bgyNormalVector, bgyNormalVector,
+			bcyNormalVector, bcyNormalVector, bcyNormalVector,
+			crgbNormalVector, crgbNormalVector, crgbNormalVector,
+			crgbNormalVector, crgbNormalVector, crgbNormalVector
+	};
 
 	public static void main(String[] args) {
 		new Aufgabe3undFolgende().start("CG Aufgabe 3", windowWidth, windowHeight);
