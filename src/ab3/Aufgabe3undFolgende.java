@@ -38,7 +38,7 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private Matrix4 transformationMatrix;
 	private Matrix4 projectionMatrix = new Matrix4(1f, 50f, 1f, 1f);
 	private final float[] cPos = { -1f, 0f, 1f };
-	private final float[] yPos = { 0f, 1f, 0f };
+	private final float[] yPos = { 0f, .707f, 0f };
 	private final float[] rPos = { 1f, 0f, 1f };
 	private final float[] gPos = { 1f, 0f, -1f };
 	private final float[] bPos = { -1f, 0f, -1f };
