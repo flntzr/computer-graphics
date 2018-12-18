@@ -1,5 +1,4 @@
 #version 330
-in vec3 triangle_color;
 in vec3 normal_vector;
 in vec3 position;
 in vec2 uv;

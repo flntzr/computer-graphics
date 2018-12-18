@@ -63,7 +63,7 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private final float[] bcyNormalVector = { -1f, 1f, 0f };
 	private final float[] crgbNormalVector = { 0f, -1f, 0f };
 
-	private final float[][] pixelCoords = { 
+	private final float[][] pyramidVertices = { 
 			cPos, rPos,yPos, 
 			rPos, gPos,yPos, 
 			gPos, bPos, yPos,
@@ -110,15 +110,14 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		int va = glGenVertexArrays();
 		glBindVertexArray(va);
 		int shaderNum = 0;
-		this.bindShader(this.pixelCoords, 3, shaderNum++);
+		this.bindShader(this.pyramidVertices, 3, shaderNum++);
 		this.bindShader(this.colors, 3, shaderNum++);
 
 		glUseProgram(this.phongProgram.getId());
 		va = glGenVertexArrays();
 		glBindVertexArray(va);
 		shaderNum = 0;
-		this.bindShader(this.pixelCoords, 3, shaderNum++);
-		this.bindShader(this.colors, 3, shaderNum++);
+		this.bindShader(this.pyramidVertices, 3, shaderNum++);
 		this.bindShader(this.normalVectors, 3, shaderNum++);
 		this.bindShader(this.uvCoords, 2, shaderNum++);
 		
@@ -163,12 +162,12 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		glUseProgram(this.shaderProgram.getId());
 		this.passMatrix("matrix", this.transformationMatrix);
 		this.passMatrix("projection_matrix", this.projectionMatrix);
-		glDrawArrays(GL_TRIANGLES, 0, this.pixelCoords.length);
+		glDrawArrays(GL_TRIANGLES, 0, this.pyramidVertices.length);
 
 		glUseProgram(this.phongProgram.getId());
 		this.passMatrix("matrix", new Matrix4(this.transformationMatrix).translate(3, 0, 0));
 		this.passMatrix("projection_matrix", this.projectionMatrix);
-		glDrawArrays(GL_TRIANGLES, 0, this.pixelCoords.length);
+		glDrawArrays(GL_TRIANGLES, 0, this.pyramidVertices.length);
 		// Matrix an Shader übertragen
 		// VAOs zeichnen
 	}

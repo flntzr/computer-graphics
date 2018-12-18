@@ -2,7 +2,7 @@
 
 layout(location=0) in vec3 positions;
 layout(location=1) in vec3 colors;
-layout(location=3) in vec2 uvs;
+layout(location=2) in vec2 uvs;
 
 out vec3 triangleColor;
 out vec2 uv;
