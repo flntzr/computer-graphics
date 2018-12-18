@@ -10,6 +10,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import ab3.Aufgabe3undFolgende;
+
 public abstract class AbstractOpenGLBase {
 	static {
 		System.setProperty("java.awt.headless", "true");
@@ -23,10 +25,11 @@ public abstract class AbstractOpenGLBase {
 
 	protected abstract void destroy();
 
-	public void start(String title, int width, int height) {
+	public long start(String title, int width, int height) {
 		System.out.println("LWJGL " + Version.getVersion());
 
 		long window = openWindow(title, width, height);
+		Aufgabe3undFolgende.window = window;
 		GL.createCapabilities(); // internally connects OpenGL and GLFW's current context
 		System.out.println("OpenGL " + glGetString(GL_VERSION));
 
@@ -47,6 +50,7 @@ public abstract class AbstractOpenGLBase {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
+		return window;
 	}
 
 	private long openWindow(String title, int width, int height) {

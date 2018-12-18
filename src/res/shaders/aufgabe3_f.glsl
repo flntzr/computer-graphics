@@ -18,7 +18,5 @@ vec3 getProceduralTexture() {
 }
 
 void main() {
-//	color = vec3(texture(sampler, uv));
-//	color = triangleColor;
 	color = getProceduralTexture();
 }

@@ -19,6 +19,10 @@ import static org.lwjgl.opengl.GL33.glGetUniformLocation;
 import static org.lwjgl.opengl.GL33.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL33.glUseProgram;
 import static org.lwjgl.opengl.GL33.glVertexAttribPointer;
+
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
+
 import static org.lwjgl.opengl.GL33.glBindVertexArray;
 import static org.lwjgl.opengl.GL33.glGenVertexArrays;
 
@@ -34,7 +38,9 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private ShaderProgram phongProgram;
 	private static int windowWidth = 800;
 	private static int windowHeight = 800;
+	public static long window;
 	private String textureName = "turquoise.jpg";
+	private float rotationIncrement = 0.03f;
 	
 	private float rotation = 0f;
 	private Matrix4 transformationMatrix;
@@ -124,7 +130,8 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	};
 
 	public static void main(String[] args) {
-		new Aufgabe3undFolgende().start("CG Aufgabe 3", windowWidth, windowHeight);
+		Aufgabe3undFolgende ab3 = new Aufgabe3undFolgende();
+		ab3.start("CG Aufgabe 3", windowWidth, windowHeight);
 	}
 
 	@Override
@@ -133,6 +140,20 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		
 		this.shaderProgram = new ShaderProgram("aufgabe3");
 		this.phongProgram = new ShaderProgram("phong");
+		GLFWKeyCallback c = new GLFWKeyCallback() {
+			
+			@Override
+			public void invoke(long window, int key, int scancode, int action, int mods) {
+				if (key == GLFW.GLFW_KEY_UP && action == GLFW.GLFW_PRESS) {
+					rotationIncrement += 0.01;
+				} else if (key == GLFW.GLFW_KEY_DOWN && action == GLFW.GLFW_PRESS) {
+					rotationIncrement -= 0.01;
+				}
+				
+			}
+		};
+		
+		GLFW.glfwSetKeyCallback(window, c);
 		
 		glUseProgram(this.phongProgram.getId());
 		int va = glGenVertexArrays();
@@ -175,7 +196,7 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
 		Matrix4 mat = new Matrix4().rotateX(rotation * .3f).rotateY(rotation).translate(-1.5f, 0f, -6f);
-		rotation += 0.03f;
+		rotation += this.rotationIncrement;
 		this.transformationMatrix = mat;
 	}
 
@@ -193,6 +214,7 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		this.passMatrix(phongProgId, "matrix", new Matrix4(this.transformationMatrix).translate(3, 0, 0));
 		this.passMatrix(phongProgId, "projection_matrix", this.projectionMatrix);
 		glDrawArrays(GL_TRIANGLES, 0, this.pyramidVertices.length);
+		
 		// Matrix an Shader übertragen
 		// VAOs zeichnen
 	}
