@@ -32,18 +32,27 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 
 	private ShaderProgram shaderProgram;
 	private ShaderProgram phongProgram;
-	private static int windowWidth = 700;
-	private static int windowHeight = 700;
+	private static int windowWidth = 800;
+	private static int windowHeight = 800;
 	private String textureName = "turquoise.jpg";
 	
 	private float rotation = 0f;
 	private Matrix4 transformationMatrix;
 	private Matrix4 projectionMatrix = new Matrix4(1f, 50f, 1f, 1f);
 	private final float[] cPos = { -1f, 0f, 1f };
-	private final float[] yPos = { 0f, 1f, 0f };
 	private final float[] rPos = { 1f, 0f, 1f };
 	private final float[] gPos = { 1f, 0f, -1f };
 	private final float[] bPos = { -1f, 0f, -1f };
+	private final float[] yPos = { 0f, 1f, 0f };
+	
+	private final float[] aPos = { -1f, 1f, 1f };
+	private final float[] sPos = { 1f, 1f, 1f };
+	private final float[] dPos = { 1f, 1f, -1f };
+	private final float[] fPos = { -1f, 1f, -1f };
+	private final float[] hPos = { -1f, -1f, 1f };
+	private final float[] jPos = { 1f, -1f, 1f };
+	private final float[] kPos = { 1f, -1f, -1f };
+	private final float[] lPos = { -1f, -1f, -1f };
 	
 	private final float[] cColor = { 0f, 1f, 1f };
 	private final float[] yColor = { 1f, 1f, 0f };
@@ -51,17 +60,26 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private final float[] gColor = { 0f, 1f, 0f };
 	private final float[] bColor = { 0f, 0f, 1f };
 	
-	private final float[] cUV = { 0f, 1f };
-	private final float[] yUV = { .5f, 0f };
-	private final float[] rUV = { 0f, -1f };
-	private final float[] gUV = { 0f, 1f };
-	private final float[] bUV = { 0f, -1f };
-	
 	private final float[] cryNormalVector = { 0f, 1f, 1f };
 	private final float[] rgyNormalVector = { 1f, 1f, 0f };
 	private final float[] bgyNormalVector = { 0f, 1f, -1f };
 	private final float[] bcyNormalVector = { -1f, 1f, 0f };
 	private final float[] crgbNormalVector = { 0f, -1f, 0f };
+	
+	private final float[][] cubeVertices = {
+			lPos, jPos, hPos, 
+			lPos, kPos, jPos,
+			hPos, jPos, aPos,
+			jPos, sPos, aPos,
+			jPos, kPos, sPos,
+			kPos, dPos, sPos,
+			fPos, kPos, lPos,
+			fPos, dPos, kPos,
+			lPos, aPos, fPos,
+			lPos, hPos, aPos,
+			aPos, sPos, fPos,
+			sPos, dPos, fPos
+	};
 
 	private final float[][] pyramidVertices = { 
 			cPos, rPos,yPos, 
@@ -69,14 +87,17 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 			gPos, bPos, yPos,
 			bPos, cPos,yPos,
 			bPos, rPos,cPos, 
-			bPos, gPos, rPos };
+			bPos, gPos, rPos 
+	};
+	
 	private final float[][] colors = { 
 			cColor, rColor, yColor,
 			rColor, gColor, yColor,
 			gColor, bColor, yColor,
 			bColor, cColor, yColor,
 			bColor, rColor, cColor,
-			bColor, gColor, rColor };
+			bColor, gColor, rColor 
+	};
 	
 	private final float[][] normalVectors = { 
 			cryNormalVector, cryNormalVector, cryNormalVector,
@@ -87,14 +108,20 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 			crgbNormalVector, crgbNormalVector, crgbNormalVector
 	};
 	
-	
 	private final float[][] uvCoords = { 
-		cUV, rUV, yUV,
-		rUV, gUV, yUV,
-		gUV, bUV, yUV,
-		bUV, cUV, yUV,
 		{0,0}, {1,1}, {0,1},
-		{0,0}, {1,0}, {1,1} };
+		{0,0}, {1,0}, {1,1},
+		{0,1}, {1,1}, {0,0},
+		{0,0}, {1,0}, {1,1},
+		{0,1}, {1,1}, {0,0},
+		{0,0}, {1,0}, {1,1},
+		{0,0}, {1,1}, {0,1},
+		{0,0}, {1,0}, {1,1},
+		{0,0}, {1,1}, {0,1},
+		{0,0}, {1,0}, {1,1},
+		{0,1}, {1,1}, {0,0},
+		{0,0}, {1,0}, {1,1},
+	};
 
 	public static void main(String[] args) {
 		new Aufgabe3undFolgende().start("CG Aufgabe 3", windowWidth, windowHeight);
@@ -102,35 +129,31 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 
 	@Override
 	protected void init() {
+		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
+		
 		this.shaderProgram = new ShaderProgram("aufgabe3");
 		this.phongProgram = new ShaderProgram("phong");
-
-		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
-		glUseProgram(this.shaderProgram.getId());
+		
+		glUseProgram(this.phongProgram.getId());
 		int va = glGenVertexArrays();
 		glBindVertexArray(va);
 		int shaderNum = 0;
-		this.bindShader(this.pyramidVertices, 3, shaderNum++);
-		this.bindShader(this.colors, 3, shaderNum++);
-
-		glUseProgram(this.phongProgram.getId());
-		va = glGenVertexArrays();
-		glBindVertexArray(va);
-		shaderNum = 0;
+		
 		this.bindShader(this.pyramidVertices, 3, shaderNum++);
 		this.bindShader(this.normalVectors, 3, shaderNum++);
 		this.bindShader(this.uvCoords, 2, shaderNum++);
+		this.bindShader(this.cubeVertices, 3, shaderNum++);
 		
 		Texture texture = new Texture(this.textureName);
 		int textureId = texture.getId();
 		GL33.glBindTexture(textureId, GL33.GL_TEXTURE0);
-
+		
 		glEnable(GL_DEPTH_TEST); // z-Buffer aktivieren
 		glEnable(GL_CULL_FACE); // backface culling aktivieren
 	}
 
 	private void bindShader(float[][] arr, int groupSize, int pos) {
-		float[] result = new float[3 * arr.length];
+		float[] result = new float[groupSize * arr.length];
 		int index = 0;
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < groupSize; j++) {
@@ -159,21 +182,23 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	@Override
 	protected void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram(this.shaderProgram.getId());
-		this.passMatrix("matrix", this.transformationMatrix);
-		this.passMatrix("projection_matrix", this.projectionMatrix);
-		glDrawArrays(GL_TRIANGLES, 0, this.pyramidVertices.length);
+		int shaderProgId = this.shaderProgram.getId();
+		glUseProgram(shaderProgId);
+		this.passMatrix(shaderProgId, "matrix", this.transformationMatrix);
+		this.passMatrix(shaderProgId, "projection_matrix", this.projectionMatrix);
+		glDrawArrays(GL_TRIANGLES, 0, this.cubeVertices.length);
 
-		glUseProgram(this.phongProgram.getId());
-		this.passMatrix("matrix", new Matrix4(this.transformationMatrix).translate(3, 0, 0));
-		this.passMatrix("projection_matrix", this.projectionMatrix);
+		int phongProgId = this.phongProgram.getId();
+		glUseProgram(phongProgId);
+		this.passMatrix(phongProgId, "matrix", new Matrix4(this.transformationMatrix).translate(3, 0, 0));
+		this.passMatrix(phongProgId, "projection_matrix", this.projectionMatrix);
 		glDrawArrays(GL_TRIANGLES, 0, this.pyramidVertices.length);
 		// Matrix an Shader übertragen
 		// VAOs zeichnen
 	}
 
-	private void passMatrix(String name, Matrix4 m) {
-		int loc = glGetUniformLocation(this.shaderProgram.getId(), name);
+	private void passMatrix(int shaderProgId, String name, Matrix4 m) {
+		int loc = glGetUniformLocation(shaderProgId, name);
 		glUniformMatrix4fv(loc, false, m.getValuesAsArray());
 	}
 
