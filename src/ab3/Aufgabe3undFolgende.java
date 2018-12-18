@@ -34,7 +34,7 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private ShaderProgram phongProgram;
 	private static int windowWidth = 700;
 	private static int windowHeight = 700;
-	private String textureName = "turtle.jpg";
+	private String textureName = "turquoise.jpg";
 	
 	private float rotation = 0f;
 	private Matrix4 transformationMatrix;
@@ -93,8 +93,8 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 		rUV, gUV, yUV,
 		gUV, bUV, yUV,
 		bUV, cUV, yUV,
-		bUV, rUV, cUV,
-		bUV, gUV, rUV };
+		{0,0}, {1,1}, {0,1},
+		{0,0}, {1,0}, {1,1} };
 
 	public static void main(String[] args) {
 		new Aufgabe3undFolgende().start("CG Aufgabe 3", windowWidth, windowHeight);
