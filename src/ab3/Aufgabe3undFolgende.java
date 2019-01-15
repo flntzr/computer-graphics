@@ -40,9 +40,11 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	private static int windowHeight = 800;
 	public static long window;
 	private String textureName = "turquoise.jpg";
-	private float rotationIncrement = 0.03f;
+	private float rotationIncrementX = 0.01f;
+	private float rotationIncrementY = 0.02f;
 	
-	private float rotation = 0f;
+	private float rotationX = 0f;
+	private float rotationY = 0f;
 	private Matrix4 transformationMatrix;
 	private Matrix4 projectionMatrix = new Matrix4(1f, 50f, 1f, 1f);
 	private final float[] cPos = { -1f, 0f, 1f };
@@ -145,11 +147,14 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (key == GLFW.GLFW_KEY_UP && action == GLFW.GLFW_PRESS) {
-					rotationIncrement += 0.01;
+					rotationIncrementX += 0.01;
 				} else if (key == GLFW.GLFW_KEY_DOWN && action == GLFW.GLFW_PRESS) {
-					rotationIncrement -= 0.01;
+					rotationIncrementX -= 0.01;
+				} else if (key == GLFW.GLFW_KEY_RIGHT && action == GLFW.GLFW_PRESS) {
+					rotationIncrementY -= 0.01;
+				} else if (key == GLFW.GLFW_KEY_LEFT && action == GLFW.GLFW_PRESS) {
+					rotationIncrementY += 0.01;
 				}
-				
 			}
 		};
 		
@@ -195,8 +200,9 @@ public class Aufgabe3undFolgende extends AbstractOpenGLBase {
 	@Override
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
-		Matrix4 mat = new Matrix4().rotateX(rotation * .3f).rotateY(rotation).translate(-1.5f, 0f, -6f);
-		rotation += this.rotationIncrement;
+		Matrix4 mat = new Matrix4().rotateX(rotationX).rotateY(rotationY).translate(-1.5f, 0f, -6f);
+		this.rotationX += this.rotationIncrementX;
+		this.rotationY += this.rotationIncrementY;
 		this.transformationMatrix = mat;
 	}
 
